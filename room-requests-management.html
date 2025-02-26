@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Room Requests Management</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            background-color: #f4f6f9;
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            padding-top: 20px;
+        }
+
+        .container {
+            width: 80%;
+            max-width: 800px;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #34495e;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        /* Request Table Styling */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #34495e;
+            color: white;
+            font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        /* Action Buttons */
+        .btn {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            margin: 0 5px;
+            transition: transform 0.3s;
+        }
+
+        .btn-approve {
+            background-color: #27ae60;
+            color: white;
+        }
+
+        .btn-reject {
+            background-color: #e74c3c;
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Room Requests Management</h1>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Student ID</th>
+                    <th>Name</th>
+                    <th>Current Room</th>
+                    <th>Requested Room</th>
+                    <th>Reason</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="roomRequestsTable">
+                <!-- Room request entries will be dynamically inserted here -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        // Sample data for room requests
+        const roomRequests = [
+            { studentId: 'S101', name: 'Alice Johnson', currentRoom: '201', requestedRoom: '305', reason: 'Need quieter room for study.' },
+            { studentId: 'S102', name: 'Bob Brown', currentRoom: '105', requestedRoom: '108', reason: 'Roommate conflict.' },
+            { studentId: 'S103', name: 'Carol White', currentRoom: '202', requestedRoom: '203', reason: 'Closer to library access.' }
+        ];
+
+        function loadRoomRequests() {
+            const table = document.getElementById('roomRequestsTable');
+
+            roomRequests.forEach((request, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${request.studentId}</td>
+                    <td>${request.name}</td>
+                    <td>${request.currentRoom}</td>
+                    <td>${request.requestedRoom}</td>
+                    <td>${request.reason}</td>
+                    <td>
+                        <button class="btn btn-approve" onclick="approveRequest(${index})">Approve</button>
+                        <button class="btn btn-reject" onclick="rejectRequest(${index})">Reject</button>
+                    </td>
+                `;
+                table.appendChild(row);
+            });
+        }
+
+        function approveRequest(index) {
+            const request = roomRequests[index];
+            alert(`Room request for ${request.name} has been approved.`);
+            // Additional backend call to mark request as approved can be added here
+        }
+
+        function rejectRequest(index) {
+            const request = roomRequests[index];
+            alert(`Room request for ${request.name} has been rejected.`);
+            // Additional backend call to mark request as rejected can be added here
+        }
+
+        // Load room requests on page load
+        window.onload = loadRoomRequests;
+    </script>
+
+</body>
+</html>

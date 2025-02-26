@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Overview</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            background-color: white;
+            color: #333;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            margin-top: 50px;
+        }
+
+        h1 {
+            color: red;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        /* Table styling */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            background-color: white; /* Added white background */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Slight shadow for elevation */
+        }
+
+        table, th, td {
+            border: 1px solid red;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+        }
+
+        th {
+            background-color: red;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9; /* Light grey for even rows */
+        }
+
+        /* Button styling */
+        .btn {
+            background-color: red;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .btn:hover {
+            transform: scale(1.1);
+            background-color: darkred;
+        }
+
+        /* Modal Styling */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.4);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 40%;
+        }
+
+        .modal-header {
+            font-size: 1.5rem;
+            color: red;
+            margin-bottom: 20px;
+        }
+
+        .modal input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+        }
+
+        .modal .btn {
+            display: block;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Student Overview</h1>
+
+        <!-- Student Table -->
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Roll No</th>
+                    <th>Room No</th>
+                    <th>Fees Paid</th>
+                    <th>Contact No</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="studentTable">
+                <!-- Student rows will be dynamically inserted here -->
+            </tbody>
+        </table>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+            <button class="btn" onclick="openModal('add')">Add Student</button>
+        </div>
+    </div>
+
+    <!-- Add/Update Modal -->
+    <div id="studentModal" class="modal">
+        <div class="modal-content">
+            <h2 class="modal-header" id="modalHeader">Add Student</h2>
+            <input type="text" id="studentName" placeholder="Name">
+            <input type="text" id="rollNo" placeholder="Roll No">
+            <input type="text" id="roomNo" placeholder="Room No">
+            <input type="text" id="feesPaid" placeholder="Fees Paid (Yes/No)">
+            <input type="text" id="contactNo" placeholder="Contact No">
+            <button class="btn" onclick="saveStudent()">Save</button>
+        </div>
+    </div>
+
+    <script>
+        let students = [
+            {name: 'John Doe', rollNo: '123456', roomNo: '305', feesPaid: 'Yes', contactNo: '+1234567890'}
+        ];
+
+        let editIndex = -1; // Keeps track of which student is being edited
+
+        // Function to display students in the table
+        function displayStudents() {
+            const table = document.getElementById('studentTable');
+            table.innerHTML = '';
+            students.forEach((student, index) => {
+                table.innerHTML += `
+                    <tr>
+                        <td>${student.name}</td>
+                        <td>${student.rollNo}</td>
+                        <td>${student.roomNo}</td>
+                        <td>${student.feesPaid}</td>
+                        <td>${student.contactNo}</td>
+                        <td>
+                            <button class="btn" onclick="openModal('update', ${index})">Update</button>
+                            <button class="btn" onclick="deleteStudent(${index})">Delete</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        // Function to open modal for adding or updating a student
+        function openModal(action, index = -1) {
+            const modal = document.getElementById('studentModal');
+            modal.style.display = 'block';
+            document.getElementById('modalHeader').innerText = action === 'add' ? 'Add Student' : 'Update Student';
+            if (action === 'update') {
+                editIndex = index;
+                const student = students[index];
+                document.getElementById('studentName').value = student.name;
+                document.getElementById('rollNo').value = student.rollNo;
+                document.getElementById('roomNo').value = student.roomNo;
+                document.getElementById('feesPaid').value = student.feesPaid;
+                document.getElementById('contactNo').value = student.contactNo;
+            } else {
+                editIndex = -1; // Reset index for new student
+                document.getElementById('studentName').value = '';
+                document.getElementById('rollNo').value = '';
+                document.getElementById('roomNo').value = '';
+                document.getElementById('feesPaid').value = '';
+                document.getElementById('contactNo').value = '';
+            }
+        }
+
+        // Function to save a student (add or update)
+        function saveStudent() {
+            const name = document.getElementById('studentName').value;
+            const rollNo = document.getElementById('rollNo').value;
+            const roomNo = document.getElementById('roomNo').value;
+            const feesPaid = document.getElementById('feesPaid').value;
+            const contactNo = document.getElementById('contactNo').value;
+
+            if (editIndex === -1) {
+                // Add new student
+                students.push({name, rollNo, roomNo, feesPaid, contactNo});
+            } else {
+                // Update existing student
+                students[editIndex] = {name, rollNo, roomNo, feesPaid, contactNo};
+            }
+
+            closeModal();
+            displayStudents();
+        }
+
+        // Function to delete a student
+        function deleteStudent(index) {
+            students.splice(index, 1);
+            displayStudents();
+        }
+
+        // Function to close modal
+        function closeModal() {
+            document.getElementById('studentModal').style.display = 'none';
+        }
+
+        // Initial display of students
+        displayStudents();
+    </script>
+</body>
+</html>

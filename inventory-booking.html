@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventory Booking</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            background: linear-gradient(to right, #333333, #dd1818);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            height: 100vh;
+            color: #ffffff;
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 40px;
+            box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.3);
+            width: 400px;
+            text-align: left;
+            backdrop-filter: blur(10px);
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 1.8rem;
+            color: #e4e4e4;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #ffffff;
+            font-weight: bold;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+            font-size: 1rem;
+            margin-bottom: 10px;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #ff512f, #f09819);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 1.1rem;
+            width: 100%;
+            transition: transform 0.3s;
+            margin-top: 15px;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0px 4px 10px rgba(240, 152, 25, 0.3);
+        }
+
+        .error {
+            color: #f8d7da;
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            padding: 10px;
+            margin-top: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Inventory Booking</h1>
+        <form id="inventoryBookingForm">
+            <div class="form-group">
+                <label for="itemName">Item Name</label>
+                <input type="text" id="itemName" placeholder="Enter item (e.g., Kettle, Microwave)" required>
+                <div id="errorMessage" class="error" style="display:none;">Invalid item. Please choose from Kettle, Microwave, Iron, or Induction.</div>
+            </div>
+
+            <div class="form-group">
+                <label for="timeIn">Time In</label>
+                <input type="datetime-local" id="timeIn" required>
+            </div>
+
+            <div class="form-group">
+                <label for="timeOut">Time Out</label>
+                <input type="datetime-local" id="timeOut" required>
+            </div>
+
+            <div class="form-group">
+                <label for="studentFeedback">Feedback (Optional)</label>
+                <textarea id="studentFeedback" rows="3" placeholder="Enter any feedback" style="width: 100%;"></textarea>
+            </div>
+
+            <button type="button" class="btn" onclick="submitInventoryBooking()">Submit Booking</button>
+        </form>
+    </div>
+
+    <script>
+        function submitInventoryBooking() {
+            const itemName = document.getElementById('itemName').value.trim();
+            const validItems = ['Kettle', 'Microwave', 'Iron', 'Induction']; // List of valid items
+            const timeIn = document.getElementById('timeIn').value;
+            const timeOut = document.getElementById('timeOut').value;
+            const studentFeedback = document.getElementById('studentFeedback').value;
+            const studentId = 1; // Replace with actual student ID if available
+            const roomNo = 101; // Replace with actual room number if available
+            const phoneNo = '1234567890'; // Replace with actual phone number if available
+            const name = 'John Doe'; // Replace with actual student name if available
+
+            // Check if the entered item is valid
+            if (!validItems.includes(itemName)) {
+                document.getElementById('errorMessage').style.display = 'block';
+                return;
+            }
+
+            // Hide error message if item is valid
+            document.getElementById('errorMessage').style.display = 'none';
+
+            if (itemName && timeIn && timeOut) {
+                fetch('/submit-inventory', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        name, rollno: studentId, roomno: roomNo, phoneno: phoneNo,
+                        item: itemName, studentfeedback: studentFeedback, timein: timeIn, timeout: timeOut
+                    }),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.message) {
+                        alert(data.message);
+                        document.getElementById('inventoryBookingForm').reset();
+                    }
+                })
+                .catch(error => {
+                    alert('Failed to book inventory');
+                    console.error('Error:', error);
+                });
+            } else {
+                alert("Please fill in all required fields.");
+            }
+        }
+    </script>
+
+</body>
+</html>

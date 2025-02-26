@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submit Complaint</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            background: linear-gradient(to right, #485563, #29323c);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            height: 100vh;
+            color: #ffffff;
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 40px;
+            box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.3);
+            width: 400px;
+            text-align: left;
+            backdrop-filter: blur(10px);
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 1.8rem;
+            color: #e4e4e4;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #ffffff;
+            font-weight: bold;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+            font-size: 1rem;
+            margin-bottom: 10px;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+        }
+
+        input::placeholder, textarea::placeholder {
+            color: #c2c2c2;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #36d1dc, #5b86e5);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 1.1rem;
+            width: 100%;
+            transition: transform 0.3s;
+            margin-top: 15px;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0px 4px 10px rgba(91, 134, 229, 0.3);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Submit Complaint</h1>
+        <form id="complaintForm">
+            <div class="form-group">
+                <label for="studentId">Student ID</label>
+                <input type="text" id="studentId" placeholder="Enter your student ID" required>
+            </div>
+
+            <div class="form-group">
+                <label for="roomNo">Room No</label>
+                <input type="text" id="roomNo" placeholder="Enter your room number" required>
+            </div>
+
+            <div class="form-group">
+                <label for="complaint">Complaint</label>
+                <input type="text" id="complaint" placeholder="Enter the complaint type" required>
+            </div>
+
+            <div class="form-group">
+                <label for="description">Complaint Description</label>
+                <textarea id="description" rows="3" placeholder="Describe your complaint" required></textarea>
+            </div>
+
+            <button type="button" class="btn" onclick="submitComplaint()">Submit Complaint</button>
+        </form>
+    </div>
+
+    <script>
+        async function submitComplaint() {
+            const student_id = document.getElementById('studentId').value;
+            const room_no = document.getElementById('roomNo').value;
+            const complaint_type = document.getElementById('complaint').value;
+            const complaint_description = document.getElementById('description').value;
+            const complaint_date = new Date().toISOString().split('T')[0]; // Format date as YYYY-MM-DD
+        
+            if (student_id && room_no && complaint_type && complaint_description) {
+                const response = await fetch("http://localhost:3000/submit-complaint", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        student_id,
+                        room_no,
+                        complaint_type,
+                        complaint_description,
+                        complaint_date
+                    })
+                });
+        
+                const result = await response.json();
+                alert(result.message);
+                document.getElementById('complaintForm').reset();
+            } else {
+                alert("Please fill in all fields.");
+            }
+        }
+        
+    </script>
+
+</body>
+</html>

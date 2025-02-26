@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complaint Management - Warden</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            background-color: #f3f3f3;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1000px;
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+
+        h1 {
+            color: red;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: white;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        table, th, td {
+            border: 1px solid red;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: red;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .btn {
+            background-color: red;
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+            background-color: darkred;
+        }
+
+        .status-resolved {
+            color: green;
+            font-weight: bold;
+        }
+
+        .status-pending {
+            color: orange;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Complaint Management - Warden</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Room No</th>
+                    <th>Student ID</th>
+                    <th>Complaint Type</th>
+                    <th>Description</th>
+                    <th>Date of Complaint</th>
+                    <th>Status</th>
+                    <th>Date of Resolution</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="complaintTable">
+                <!-- Complaint data will be dynamically inserted here -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        // Sample complaints data (this will come from a database in a real app)
+        const complaints = [
+            {roomNo: '101', studentId: 'S123', complaintType: 'Maintenance', description: 'Broken window', date: '2023-10-15', status: 'Pending', resolvedDate: ''},
+            {roomNo: '102', studentId: 'S124', complaintType: 'Noise', description: 'Loud music in room', date: '2023-10-16', status: 'Resolved', resolvedDate: '2023-10-17'},
+            {roomNo: '103', studentId: 'S125', complaintType: 'Cleanliness', description: 'Dirty bathroom', date: '2023-10-16', status: 'Pending', resolvedDate: ''}
+        ];
+
+        // Function to display complaints in the table
+        function displayComplaints() {
+            const table = document.getElementById('complaintTable');
+            table.innerHTML = '';
+            complaints.forEach((complaint, index) => {
+                table.innerHTML += `
+                    <tr>
+                        <td>${complaint.roomNo}</td>
+                        <td>${complaint.studentId}</td>
+                        <td>${complaint.complaintType}</td>
+                        <td>${complaint.description}</td>
+                        <td>${complaint.date}</td>
+                        <td class="${complaint.status === 'Resolved' ? 'status-resolved' : 'status-pending'}">${complaint.status}</td>
+                        <td>${complaint.resolvedDate || '-'}</td>
+                        <td>
+                            ${complaint.status === 'Pending' ? `<button class="btn" onclick="resolveComplaint(${index})">Mark as Resolved</button>` : ''}
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        // Function to mark a complaint as resolved
+        function resolveComplaint(index) {
+            const today = new Date().toISOString().split('T')[0];
+            complaints[index].status = 'Resolved';
+            complaints[index].resolvedDate = today;
+            displayComplaints();
+            alert('Complaint marked as resolved.');
+        }
+
+        // Initial display of complaints
+        displayComplaints();
+    </script>
+
+</body>
+</html>

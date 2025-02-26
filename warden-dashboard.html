@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Warden Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* General Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f6f9;
+            color: #333;
+            display: flex;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background-color: #34495e;
+            color: white;
+            position: fixed;
+            height: 100vh;
+            padding: 20px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .sidebar h2 {
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+
+        .sidebar a {
+            color: white;
+            text-decoration: none;
+            padding: 15px 20px;
+            display: block;
+            width: 100%;
+            text-align: left;
+            transition: background-color 0.3s;
+            font-size: 1.1rem;
+        }
+
+        .sidebar a:hover {
+            background-color: #2c3e50;
+        }
+
+        .sidebar .active {
+            background-color: #2c3e50;
+            font-weight: bold;
+        }
+
+        /* Main Dashboard Area */
+        .main-content {
+            margin-left: 250px;
+            padding: 20px;
+            width: calc(100% - 250px);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        /* Login Details (top-right) */
+        .login-details {
+            font-size: 1rem;
+            color: #34495e;
+            text-align: right;
+        }
+
+        .login-details img {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            vertical-align: middle;
+            margin-right: 10px;
+        }
+
+        /* Dashboard Cards */
+        .card-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: center;
+            transition: transform 0.3s;
+            cursor: pointer;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .card img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: #34495e;
+        }
+
+        .card p {
+            font-size: 1rem;
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .card a {
+            text-decoration: none;
+            color: #3498db;
+            font-weight: bold;
+        }
+
+        .card a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar Navigation -->
+    <div class="sidebar">
+        <h2>Warden Dashboard</h2>
+        <a href="#" class="active">Dashboard</a>
+        <a href="student-management.html">Student Management</a>
+        <a href="room-management.html">Room Management</a>
+        <a href="complaint-management.html">Complaint Management</a>
+        <a href="inventory-management.html">Inventory Management</a>
+        <a href="logout.html">Logout</a>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="main-content">
+        <div class="header">
+            <span>Welcome, Warden</span>
+            <div class="login-details">
+                <img src="warden-profile.jpg" alt="Warden Profile"> <!-- Replace with profile image URL -->
+                <span>John Doe</span> | <a href="logout.html" style="color: #34495e; text-decoration: none;">Logout</a>
+            </div>
+        </div>
+        
+        <!-- Dashboard Cards Section -->
+        <div class="card-container">
+            <!-- Student Management Card -->
+            <div class="card" onclick="location.href='student-management.html'">
+                <img src="student-management.jpg" alt="Student Management"> <!-- Replace with actual image path -->
+                <h3>Student Management</h3>
+                <p>Manage student details, admissions, and records.</p>
+                <a href="student-management.html">Go to Student Management &rarr;</a>
+            </div>
+
+            <!-- Room Management Card -->
+            <div class="card" onclick="location.href='room-management.html'">
+                <img src="room-management.jpg" alt="Room Management"> <!-- Replace with actual image path -->
+                <h3>Room Management</h3>
+                <p>Allocate rooms and track room availability.</p>
+                <a href="room-management.html">Go to Room Management &rarr;</a>
+            </div>
+
+            <!-- Complaint Management Card -->
+            <div class="card" onclick="location.href='complaint-management.html'">
+                <img src="complaint-management.jpg" alt="Complaint Management"> <!-- Replace with actual image path -->
+                <h3>Complaint Management</h3>
+                <p>View and resolve complaints submitted by students.</p>
+                <a href="complaint-management.html">Go to Complaint Management &rarr;</a>
+            </div>
+	    <!-- Room Requests Card (to be added to the dashboard) -->
+	    <div class="card" onclick="location.href='room-requests-management.html'">
+            <img src="room-requests.jpg" alt="Room Requests"> <!-- Replace with actual image path -->
+            <h3>Room Requests</h3>
+            <p>View and manage room change requests submitted by students.</p>
+            <a href="room-requests-management.html">Go to Room Requests &rarr;</a>
+            </div>
+
+
+            <!-- Inventory Management Card -->
+            <div class="card" onclick="location.href='inventory-management.html'">
+                <img src="inventory-management.jpg" alt="Inventory Management"> <!-- Replace with actual image path -->
+                <h3>Inventory Management</h3>
+                <p>Manage inventory items and track availability.</p>
+                <a href="inventory-management.html">Go to Inventory Management &rarr;</a>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

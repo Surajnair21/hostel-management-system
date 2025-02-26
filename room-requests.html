@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Room Change Request</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            height: 100vh;
+            color: #ffffff;
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 40px;
+            box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.3);
+            width: 400px;
+            text-align: left;
+            backdrop-filter: blur(10px);
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 1.8rem;
+            color: #e4e4e4;
+            margin-bottom: 20px;
+        }
+
+        .form-group, .vacant-rooms {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #ffffff;
+            font-weight: bold;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+            font-size: 1rem;
+            margin-bottom: 10px;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+        }
+
+        input::placeholder, textarea::placeholder {
+            color: #c2c2c2;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #ff512f, #dd2476);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 1.1rem;
+            width: 100%;
+            transition: transform 0.3s;
+            margin-top: 15px;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0px 4px 10px rgba(221, 36, 118, 0.3);
+        }
+
+        /* Vacant Rooms Table Styling */
+        table {
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.1);
+            margin-top: 15px;
+            color: #ffffff;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: center;
+            border-bottom: 1px solid #ffffff;
+        }
+
+        th {
+            font-weight: bold;
+            color: #ff8c94;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Room Change Request</h1>
+        
+        <form id="roomRequestForm">
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" id="name" placeholder="Enter your name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="studentId">Student ID</label>
+                <input type="text" id="studentId" placeholder="Enter your student ID" required>
+            </div>
+
+            <div class="form-group">
+                <label for="currentRoomNo">Current Room Number</label>
+                <input type="text" id="currentRoomNo" placeholder="Enter your current room number" required>
+            </div>
+
+            <div class="form-group">
+                <label for="phoneNo">Phone Number</label>
+                <input type="text" id="phoneNo" placeholder="Enter your phone number" required>
+            </div>
+
+            <div class="form-group">
+                <label for="availableRooms">Select Available Room</label>
+                <select id="availableRooms" required>
+                    <!-- Available room options will be dynamically generated here -->
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="reason">Reason for Room Change</label>
+                <textarea id="reason" rows="3" placeholder="Enter the reason for room change" required></textarea>
+            </div>
+
+            <button type="button" class="btn" onclick="submitRoomRequest()">Submit Request</button>
+        </form>
+
+        <!-- Vacant Rooms Table -->
+        <div class="vacant-rooms">
+            <h2>Vacant Rooms</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Room Number</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="vacantRoomsTable">
+                    <!-- Vacant room rows will be populated here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // Sample data for vacant rooms
+        const vacantRooms = [
+            { roomNo: '101', status: 'Available' },
+            { roomNo: '102', status: 'Available' },
+            { roomNo: '103', status: 'Available' },
+            { roomNo: '104', status: 'Available' },
+            { roomNo: '105', status: 'Available' }
+        ];
+
+        // Populate the vacant rooms table and dropdown
+        function loadVacantRooms() {
+            const table = document.getElementById('vacantRoomsTable');
+            const dropdown = document.getElementById('availableRooms');
+
+            // Clear existing options in dropdown
+            dropdown.innerHTML = '<option value="">Select a Room</option>';
+
+            vacantRooms.forEach(room => {
+                // Add row to table
+                const row = document.createElement('tr');
+                row.innerHTML = `<td>${room.roomNo}</td><td>${room.status}</td>`;
+                table.appendChild(row);
+
+                // Add room to dropdown
+                const option = document.createElement('option');
+                option.value = room.roomNo;
+                option.textContent = `Room ${room.roomNo}`;
+                dropdown.appendChild(option);
+            });
+        }
+
+        // Load vacant rooms on page load
+        window.onload = loadVacantRooms;
+
+        // Function to handle form submission
+        function submitRoomRequest() {
+            const name = document.getElementById('name').value;
+            const studentId = document.getElementById('studentId').value;
+            const currentRoomNo = document.getElementById('currentRoomNo').value;
+            const phoneNo = document.getElementById('phoneNo').value;
+            const selectedRoom = document.getElementById('availableRooms').value;
+            const reason = document.getElementById('reason').value;
+
+            if (name && studentId && currentRoomNo && phoneNo && selectedRoom && reason) {
+                alert(`Room change request submitted for Room ${selectedRoom}!`);
+                document.getElementById('roomRequestForm').reset();
+            } else {
+                alert("Please fill in all required fields.");
+            }
+        }
+    </script>
+
+</body>
+</html>

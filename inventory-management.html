@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventory Management</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            background-color: #f3f3f3;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1000px;
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+
+        h1 {
+            color: red;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: white;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        table, th, td {
+            border: 1px solid red;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: red;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .btn {
+            background-color: red;
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+            background-color: darkred;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.4);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 40%;
+        }
+
+        .modal-header {
+            font-size: 1.5rem;
+            color: red;
+            margin-bottom: 20px;
+        }
+
+        .modal input, .modal textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+        }
+
+        .modal .btn {
+            display: block;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Inventory Management - Borrowed Items</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Roll No</th>
+                    <th>Room No</th>
+                    <th>Phone No</th>
+                    <th>Item</th>
+                    <th>Time In</th>
+                    <th>Time Out</th>
+                    <th>Feedback</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="inventoryTable">
+                <!-- Inventory data will be dynamically inserted here -->
+            </tbody>
+        </table>
+
+        <!-- Action Button -->
+        <div class="action-buttons">
+            <button class="btn" onclick="openModal('add')">Add Borrowed Item</button>
+        </div>
+    </div>
+
+   <!-- Add/Update Modal -->
+<div id="inventoryModal" class="modal">
+    <div class="modal-content">
+        <h2 class="modal-header" id="modalHeader">Add Borrowed Item</h2>
+        <input type="text" id="name" placeholder="Name">
+        <input type="text" id="rollNo" placeholder="Roll No">
+        <input type="text" id="roomNo" placeholder="Room No">
+        <input type="text" id="phoneNo" placeholder="Phone No">
+        <input type="text" id="item" placeholder="Item Name">
+        <label for="timeIn">Time In</label>
+        <input type="time" id="timeIn" required>
+        <label for="timeOut">Time Out</label>
+        <input type="time" id="timeOut" required>
+        <textarea id="feedback" rows="2" placeholder="Feedback"></textarea>
+        <button class="btn" onclick="saveItem()">Save</button>
+    </div>
+</div>
+
+
+    <script>
+        // Sample inventory data with Time In and Time Out as time inputs
+let inventory = [
+    {name: 'John Doe', rollNo: '123456', roomNo: '305', phoneNo: '+1234567890', item: 'Press', timeIn: '10:00', timeOut: '12:00', feedback: 'Good condition'}
+];
+
+        let editIndex = -1;
+
+        // Function to display inventory in the table
+        function displayInventory() {
+            const table = document.getElementById('inventoryTable');
+            table.innerHTML = '';
+            inventory.forEach((entry, index) => {
+                table.innerHTML += `
+                    <tr>
+                        <td>${entry.name}</td>
+                        <td>${entry.rollNo}</td>
+                        <td>${entry.roomNo}</td>
+                        <td>${entry.phoneNo}</td>
+                        <td>${entry.item}</td>
+                        <td>${entry.timeIn}</td>
+                        <td>${entry.timeOut}</td>
+                        <td>${entry.feedback}</td>
+                        <td>
+                            <button class="btn" onclick="openModal('update', ${index})">Update</button>
+                            <button class="btn" onclick="deleteItem(${index})">Delete</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        // Function to open modal for adding or updating an item
+        function openModal(action, index = -1) {
+            const modal = document.getElementById('inventoryModal');
+            modal.style.display = 'block';
+            document.getElementById('modalHeader').innerText = action === 'add' ? 'Add Borrowed Item' : 'Update Borrowed Item';
+
+            if (action === 'update') {
+                editIndex = index;
+                const entry = inventory[index];
+                document.getElementById('name').value = entry.name;
+                document.getElementById('rollNo').value = entry.rollNo;
+                document.getElementById('roomNo').value = entry.roomNo;
+                document.getElementById('phoneNo').value = entry.phoneNo;
+                document.getElementById('item').value = entry.item;
+                document.getElementById('timeIn').value = entry.timeIn;
+                document.getElementById('timeOut').value = entry.timeOut;
+                document.getElementById('feedback').value = entry.feedback;
+            } else {
+                editIndex = -1;
+                document.getElementById('name').value = '';
+                document.getElementById('rollNo').value = '';
+                document.getElementById('roomNo').value = '';
+                document.getElementById('phoneNo').value = '';
+                document.getElementById('item').value = '';
+                document.getElementById('timeIn').value = '';
+                document.getElementById('timeOut').value = '';
+                document.getElementById('feedback').value = '';
+            }
+        }
+
+        // Function to save an item (add or update)
+        function saveItem() {
+            const name = document.getElementById('name').value;
+            const rollNo = document.getElementById('rollNo').value;
+            const roomNo = document.getElementById('roomNo').value;
+            const phoneNo = document.getElementById('phoneNo').value;
+            const item = document.getElementById('item').value;
+            const timeIn = document.getElementById('timeIn').value;
+            const timeOut = document.getElementById('timeOut').value;
+            const feedback = document.getElementById('feedback').value;
+
+            if (name && rollNo && roomNo && phoneNo && item && timeIn && timeOut) {
+                if (editIndex === -1) {
+                    inventory.push({name, rollNo, roomNo, phoneNo, item, timeIn, timeOut, feedback});
+                } else {
+                    inventory[editIndex] = {name, rollNo, roomNo, phoneNo, item, timeIn, timeOut, feedback};
+                }
+
+                closeModal();
+                displayInventory();
+            } else {
+                alert("Please fill in all required fields.");
+            }
+        }
+
+        // Function to delete an item
+        function deleteItem(index) {
+            inventory.splice(index, 1);
+            displayInventory();
+        }
+
+        // Function to close modal
+        function closeModal() {
+            document.getElementById('inventoryModal').style.display = 'none';
+        }
+
+        // Initial display of inventory
+        displayInventory();
+    </script>
+
+</body>
+</html>
